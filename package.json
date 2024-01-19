@@ -8,7 +8,14 @@
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "pretty": "prettier --write \"src/**/*.ts\""
+    "pretty": "prettier --write \"src/**/*.ts\"",
+    "db:migrate": "yarn migration:compile && cd bin && ts-node ../node_modules/.bin/sequelize db:migrate",
+    "db:rollback": "yarn migration:compile && cd bin && ts-node ../node_modules/.bin/sequelize db:migrate:undo",
+    "migration:compile": "yarn migration:clear && yarn migration:config && tsc -p tsconfig.migration.json && yarn migration:move",
+    "migration:clear": "rm -rf bin && mkdir bin && mkdir bin/tmp",
+    "migration:config": "mkdir bin/config && cp .env ./bin/.env &&  tsc -p tsconfig.migration.config.json",
+    "migration:move": "cd bin && mkdir ./migrations && mv tmp/* migrations/",
+    "db:new": "./scripts/generate-migration.sh"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
