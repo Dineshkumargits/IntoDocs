@@ -1,27 +1,22 @@
-import express, { Application, Request, Response } from 'express';
-import bodyParser from 'body-parser';
-const app: Application = express();
+import { ResponseHandler } from './utils/handlers';
+import express from 'express';
+import multer from 'multer';
 
-app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return res.status(200).send({
-    message: 'Hello World!',
-  });
+export const uploadinMem = multer({
+  storage: multer.memoryStorage(),
+  // limits: {
+  //   fileSize: MAX_UPLOAD_FILESIZE,
+  // },
 });
 
-const PORT = 3000;
-
-try {
-  app.listen(PORT, (): void => {
-    console.log(`Connected successfully on port ${PORT}`);
-  });
-} catch (error: any) {
-  console.error(`Error occured: ${error.message}`);
-}
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.post('/post', async (req: Request, res: Response): Promise<Response> => {
-  console.log(req.body);
-  return res.status(200).send({
-    message: 'Hello World from post!',
-  });
+const router: express.Router = express.Router();
+/* eslint-disable */
+router.get('/', (req, res) => {
+  res.send('Ok');
 });
+
+router.get('/hello', (req, res) => {
+  ResponseHandler.response(res, 200, 'Ok for Hello', null);
+});
+
+module.exports = router;
