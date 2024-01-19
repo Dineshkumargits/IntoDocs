@@ -12,18 +12,29 @@
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^4.17.21",
     "@types/node": "^17.0.21",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "eslint": "^8.10.0",
     "prettier": "^2.5.1",
     "ts-node-dev": "^1.1.8",
-    "typescript": "^4.5.5"
+    "typescript": "^4.5.5",
+    "sequelize": "^6.35.2"
   },
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint",
       "pre-push": "yarn test"
     }
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "sequelize-cli": "^6.6.2",
+    "dotenv": "^16.3.1",
+    "mysql2": "^3.7.1",
+    "sequelize-typescript": "^2.1.6"
   }
 }
