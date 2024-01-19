@@ -33,17 +33,6 @@ export default class User extends DB.Model {
   })
   public user_role_id!: number;
 
-  get name(): string {
-    let name = '';
-    if (this.getDataValue('last_name')) {
-      name = name + this.getDataValue('last_name');
-    }
-    if (this.getDataValue('first_name')) {
-      name = name + ' ' + this.getDataValue('first_name');
-    }
-    return name;
-  }
-
   @CreatedAt
   public createdAt: Date;
 
