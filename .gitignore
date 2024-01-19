@@ -1,2 +1,8 @@
+.env
 node_modules
-dist
+bin/*
+yarn-error.log
+coverage
+uploads/*
+!uploads/.gitkeep
+temp
