@@ -27,13 +27,8 @@ export default class Document extends DB.Model {
   @Column
   public is_doc_box!: string;
 
-  @Column({
-    references: {
-      model: Document,
-      key: 'document_id',
-    },
-  })
-  public parent_document!: number;
+  @Column
+  public parent_document!: string;
 
   @Column({
     references: {
@@ -42,6 +37,9 @@ export default class Document extends DB.Model {
     },
   })
   public uploaded_by!: number;
+
+  @Column
+  public doc_box_id!: string;
 
   @CreatedAt
   public createdAt: Date;
@@ -57,9 +55,4 @@ sequelize.addModels([Document]);
 Document.hasOne(User, {
   sourceKey: 'uploaded_by',
   foreignKey: 'user_id',
-});
-
-Document.hasOne(Document, {
-  sourceKey: 'parent_document',
-  foreignKey: 'document_id',
 });

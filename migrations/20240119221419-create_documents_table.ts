@@ -23,11 +23,7 @@ export function up(queryInterface: QueryInterface): Promise<void> {
     },
     parent_document: {
       allowNull: true,
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'documents',
-        key: 'document_id',
-      },
+      type: DataTypes.STRING,
     },
     uploaded_by: {
       allowNull: false,
@@ -41,6 +37,9 @@ export function up(queryInterface: QueryInterface): Promise<void> {
       type: DataTypes.INTEGER,
     },
     type: {
+      type: DataTypes.STRING,
+    },
+    doc_box_id: {
       type: DataTypes.STRING,
     },
     createdAt: {

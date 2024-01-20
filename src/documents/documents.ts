@@ -5,7 +5,7 @@ import Document from '../../models/Documents';
 import User from '../../models/User';
 import { validateAdmin, validateUser } from '../middleware/validateUser';
 import { ErrorHandler, ResponseHandler } from '../utils/handlers';
-import { deleteS3Object } from '../fileupload/upload';
+import { deleteS3Object, getRandomString } from '../fileupload/upload';
 const router: express.Router = express.Router();
 router.get('/list_doc_box/:parent_document_id', validateUser, async (req, res) => {
   const user = (req as any).user;
@@ -19,6 +19,7 @@ router.get('/list_doc_box/:parent_document_id', validateUser, async (req, res) =
               parent_document: Number(parent_document_id),
             }
           : {}),
+        is_doc_box: true,
       },
       include: [{ model: DocumentPermission, include: [{ model: User, attributes: { exclude: ['password'] } }] }],
     });
@@ -30,7 +31,7 @@ router.get('/list_doc_box/:parent_document_id', validateUser, async (req, res) =
     });
     documents = await Document.findAll({
       where: {
-        parent_document: parent_document_id,
+        is_doc_box: true,
         document_id: { [Op.in]: permissions?.map((s) => s.document_id) },
       },
       raw: true,
@@ -51,6 +52,7 @@ router.post('/create_doc_box', validateAdmin, async (req, res) => {
   const created_document = await Document.create({
     name: `DocBox-${String((last_document?.document_id || 0) + 1).padStart(5, '0')}`,
     is_doc_box: true,
+    doc_box_id: getRandomString(16),
   });
   for (const user_id of user_ids) {
     await DocumentPermission.create({
@@ -111,14 +113,14 @@ router.get('/list_documents/:docbox_id', validateUser, async (req, res) => {
   if (user?.user_role_id == 1) {
     documents = await Document.findAll({
       where: {
-        parent_document: Number(docbox_id),
+        parent_document: docbox_id,
       },
       include: [{ model: DocumentPermission, include: [{ model: User, attributes: { exclude: ['password'] } }] }],
     });
   } else {
     documents = await Document.findAll({
       where: {
-        parent_document: Number(docbox_id),
+        parent_document: docbox_id,
         uploaded_by: user?.user_id,
       },
     });
