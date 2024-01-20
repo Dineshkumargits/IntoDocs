@@ -110,10 +110,24 @@ router.post('/upload_documents', validateUser, async (req, res) => {
   const user = (req as any).user;
   const { files } = (req as any).body;
   for (const file of files) {
-    await Document.create({
+    const created_document = await Document.create({
       ...file,
       uploaded_by: user?.user_id,
     });
+    if (user?.user_role_id != 1) {
+      const template = await NotificationTemplate.findOne({
+        where: {
+          name: 'UPLOAD_DOCUMENT',
+        },
+      });
+      const docbox = await Document.findOne({ where: { doc_box_id: file.parent_document } });
+      if (docbox) {
+        Notification.sendNotification(user, template, {
+          doc_box_name: docbox?.name,
+          docbox_id: docbox?.doc_box_id,
+        });
+      }
+    }
   }
   res.json('Document created');
 });
