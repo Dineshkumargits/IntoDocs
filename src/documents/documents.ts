@@ -6,6 +6,8 @@ import User from '../../models/User';
 import { validateAdmin, validateUser } from '../middleware/validateUser';
 import { ErrorHandler, ResponseHandler } from '../utils/handlers';
 import { deleteS3Object, getRandomString } from '../fileupload/upload';
+import { Notification } from '../notification/Notification';
+import NotificationTemplate from '../../models/NotificationTemplate';
 const router: express.Router = express.Router();
 router.get('/list_doc_box/:parent_document_id', validateUser, async (req, res) => {
   const user = (req as any).user;
@@ -58,6 +60,16 @@ router.post('/create_doc_box', validateAdmin, async (req, res) => {
     await DocumentPermission.create({
       document_id: created_document.document_id,
       user_id,
+    });
+    const dbUser = await User.findByPk(user_id);
+    const template = await NotificationTemplate.findOne({
+      where: {
+        name: 'ADD_DOC_BOX',
+      },
+    });
+    Notification.sendNotification(dbUser, template, {
+      doc_box_name: created_document?.name,
+      docbox_id: created_document?.doc_box_id,
     });
   }
   ResponseHandler.response(res, 200, 'success', created_document);
