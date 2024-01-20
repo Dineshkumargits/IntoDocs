@@ -37,3 +37,18 @@ export const validateToken = (token: string): Promise<User> => {
     });
   });
 };
+
+export const validateAdmin = async (req, res, next) => {
+  const token = extractAuthToken(req);
+  req.user = await validateToken(token)
+    .then((user) => {
+      if (user.user_role_id != 1) {
+        return ErrorHandler.response(res, 400, 'Invalid access', {});
+      }
+    })
+    .catch(() => {
+      return ErrorHandler.response(res, 400, 'Invalid token', {});
+    });
+  req.decodedJwt = decodeToken(token);
+  return next();
+};
