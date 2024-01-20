@@ -63,8 +63,3 @@ Document.hasOne(Document, {
   sourceKey: 'parent_document',
   foreignKey: 'document_id',
 });
-
-Document.hasMany(DocumentPermission, {
-  foreignKey: 'document_id',
-  sourceKey: 'document_id',
-});

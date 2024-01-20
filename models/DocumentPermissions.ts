@@ -43,3 +43,7 @@ DocumentPermission.hasMany(User, {
   sourceKey: 'user_id',
   foreignKey: 'user_id',
 });
+Document.hasMany(DocumentPermission, {
+  foreignKey: 'document_id',
+  sourceKey: 'document_id',
+});
