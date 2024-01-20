@@ -78,7 +78,7 @@ export const uploadFileToS3 = (file, s3_file_key: string): Promise<{ signedUrl: 
       Key: s3_file_key,
       Body: file.buffer,
       ContentType: file.mimetype,
-      // ACL: 'public-read',
+      ACL: 'public-read',
     };
     try {
       s3.upload(fileParams, function (err: any) {
