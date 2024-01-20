@@ -4,7 +4,8 @@ import DocumentPermission from '../../models/DocumentPermissions';
 import Document from '../../models/Documents';
 import User from '../../models/User';
 import { validateAdmin, validateUser } from '../middleware/validateUser';
-import { ResponseHandler } from '../utils/handlers';
+import { ErrorHandler, ResponseHandler } from '../utils/handlers';
+import { deleteS3Object } from '../fileupload/upload';
 const router: express.Router = express.Router();
 router.get('/list_doc_box/:parent_document_id', validateUser, async (req, res) => {
   const user = (req as any).user;
@@ -123,6 +124,23 @@ router.get('/list_documents/:docbox_id', validateUser, async (req, res) => {
     });
   }
   res.json(documents);
+});
+
+router.delete('/delete_document/:document_id', validateUser, async (req, res) => {
+  const user = (req as any).user;
+  const { document_id } = req.params as any;
+  const document = await Document.findByPk(document_id);
+  if (user?.user_role_id != 1 && document?.uploaded_by != user?.user_id) {
+    return ErrorHandler.response(res, 400, `You don't have access to delete this document`, {});
+  }
+  let key = document.s3_url?.split('amazonaws.com')[0];
+  await deleteS3Object(document.s3_url?.split('amazonaws.com')[0]);
+  await Document.destroy({
+    where: {
+      document_id,
+    },
+  });
+  res.json('Docuemnt deleted');
 });
 
 module.exports = router;
