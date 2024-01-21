@@ -1,6 +1,7 @@
 import { EntityNotFoundException } from '../src/utils/exceptions/EntityNotFound';
 import { AutoIncrement, Column, CreatedAt, DB, Op, PrimaryKey, sequelize, Table, UpdatedAt } from '../config/sequelize';
 import User_Roles from './User_Roles';
+import RecentActivities from './RecentActivities';
 
 @Table({
   tableName: 'users',
@@ -96,4 +97,9 @@ User.hasOne(User_Roles, {
 User_Roles.belongsTo(User, {
   foreignKey: 'user_role_id',
   targetKey: 'user_role_id',
+});
+
+User.hasMany(RecentActivities, {
+  foreignKey: 'user_id',
+  sourceKey: 'user_id',
 });
