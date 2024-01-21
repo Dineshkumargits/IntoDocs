@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --inspect  ./server/server.ts -e ts,graphql",
+    "dev": "nodemon --inspect  ./server/server.ts -e ts",
     "build": "tsc && cp .env ./bin/ && cp -r ./assets ./bin/",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
@@ -15,7 +15,8 @@
     "migration:clear": "rm -rf bin && mkdir bin && mkdir bin/tmp",
     "migration:config": "mkdir bin/config && cp .env ./bin/.env &&  tsc -p tsconfig.migration.config.json",
     "migration:move": "cd bin && mkdir ./migrations && mv tmp/* migrations/",
-    "db:new": "./scripts/generate-migration.sh"
+    "db:new": "./scripts/generate-migration.sh",
+    "start": "ts-node --transpile-only  ./server/server.ts -e ts"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
