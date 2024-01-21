@@ -73,10 +73,16 @@ router.post('/create_doc_box', validateAdmin, async (req, res) => {
         name: 'ADD_DOC_BOX',
       },
     });
-    Notification.sendNotification(dbUser, template, {
-      doc_box_name: created_document?.name,
-      docbox_id: created_document?.doc_box_id,
-    });
+    try {
+      Notification.sendNotification(dbUser, template, {
+        doc_box_name: created_document?.name,
+        docbox_id: created_document?.doc_box_id,
+      }).catch((e) => {
+        console.log('erorr on sending mail', e);
+      });
+    } catch (e) {
+      console.log('erorr on sending mail', e);
+    }
   }
   await RecentActivities.create({
     activity_title: `You created ${created_document?.name} docbox`,
@@ -159,10 +165,16 @@ router.post('/upload_documents', validateUser, async (req, res) => {
       });
 
       if (docbox) {
-        Notification.sendNotification(user, template, {
-          doc_box_name: docbox?.name,
-          docbox_id: docbox?.doc_box_id,
-        });
+        try {
+          Notification.sendNotification(user, template, {
+            doc_box_name: docbox?.name,
+            docbox_id: docbox?.doc_box_id,
+          }).catch((e) => {
+            console.log('erorr on sending mail', e);
+          });
+        } catch (e) {
+          console.log('error on sending mail', e);
+        }
       }
     }
   }
