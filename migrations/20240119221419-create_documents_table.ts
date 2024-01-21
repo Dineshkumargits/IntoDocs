@@ -26,7 +26,7 @@ export function up(queryInterface: QueryInterface): Promise<void> {
       type: DataTypes.STRING,
     },
     uploaded_by: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.INTEGER,
       references: {
         model: 'users',
