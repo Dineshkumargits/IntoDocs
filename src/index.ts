@@ -1,9 +1,10 @@
 import express from 'express';
 import multer from 'multer';
 import { ResponseHandler } from './utils/handlers';
-import { validateAdmin } from './middleware/validateUser';
+import { validateAdmin, validateUser } from './middleware/validateUser';
 import User from '../models/User';
 import { Op } from 'sequelize';
+import RecentActivities from '../models/RecentActivities';
 
 export const uploadinMem = multer({
   storage: multer.memoryStorage(),
@@ -32,6 +33,15 @@ router.get('/get_all_clients', validateAdmin, async (req, res) => {
     },
   });
   return ResponseHandler.response(res, 200, 'success', clients);
+});
+router.get('/get_recent_activities', validateUser, async (req, res) => {
+  const user = (req as any).user;
+  const ra = await RecentActivities.findAll({
+    where: {
+      user_id: user?.user_id,
+    },
+  });
+  res.json([...ra]);
 });
 
 module.exports = router;

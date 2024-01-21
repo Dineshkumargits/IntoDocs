@@ -40,8 +40,9 @@ export const validateToken = (token: string): Promise<User> => {
 
 export const validateAdmin = async (req, res, next) => {
   const token = extractAuthToken(req);
-  req.user = await validateToken(token)
+  await validateToken(token)
     .then((user) => {
+      req.user = user;
       if (user.user_role_id != 1) {
         return ErrorHandler.response(res, 400, 'Invalid access', {});
       }
